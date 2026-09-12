@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>Car Depreciation Calculator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f5f7;font-family:Arial,sans-serif;color:#111}
+.wrap{max-width:560px;margin:auto;padding:24px 16px 40px}
+h1{font-size:24px;margin:0 0 20px}.card{background:#fff;border-radius:18px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+.field{margin-bottom:18px}label,.mini{display:block;font-size:14px;font-weight:700;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+select,input{width:100%;height:48px;border:1px solid #ddd;border-radius:12px;background:#fff;padding:0 13px;font-size:16px}
+.money{position:relative}.money span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#666}.money input{padding-left:30px}
+.divider{height:1px;background:#ddd;margin:20px 0}
+.compare{border:1px solid #ddd;border-radius:14px;padding:14px;background:#fafafa;margin-bottom:12px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+.result{height:48px;display:flex;align-items:center;padding:0 12px;border:1px solid #ddd;border-radius:12px;background:#fff;font-size:18px;font-weight:700}
+.result small{font-size:11px;font-weight:400;color:#666;margin-left:5px}
+.error{font-size:13px;color:#b00020;min-height:18px;margin:8px 0}
+button{width:100%;height:50px;border:0;border-radius:12px;background:#111;color:#fff;font-size:16px;font-weight:700}
+@media(max-width:420px){.compare-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap"><h1>Car Depreciation Calculator</h1><div class="card">
+<div class="field"><label>Registration Date</label><div class="grid2"><select id="regMonth"></select><select id="regYear"></select></div></div>
+<div class="field"><label>Handover Date</label><div class="grid2"><select id="handMonth"></select><select id="handYear"></select></div></div>
+<div class="field"><label>PARF</label><div class="money"><span>$</span><input id="parf" type="number" inputmode="decimal" placeholder="0"></div></div>
+<div class="divider"></div>
+<div class="compare"><div class="compare-grid">
+<div><span class="mini">Price 1</span><div class="money"><span>$</span><input id="price1" type="number" inputmode="decimal" placeholder="0"></div></div>
+<div><span class="mini">Depreciation 1</span><div class="result" id="dep1">$0 <small>/ year</small></div></div>
+</div></div>
+<div class="compare"><div class="compare-grid">
+<div><span class="mini">Price 2</span><div class="money"><span>$</span><input id="price2" type="number" inputmode="decimal" placeholder="0"></div></div>
+<div><span class="mini">Depreciation 2</span><div class="result" id="dep2">$0 <small>/ year</small></div></div>
+</div></div>
+<div class="error" id="error"></div><button onclick="calc()">Calculate</button>
+</div></div>
+<script>
+const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function fillMonths(id){const e=document.getElementById(id);months.forEach((m,i)=>e.add(new Option(m,i+1)))}
+function fillYears(id){const e=document.getElementById(id),y=new Date().getFullYear();for(let n=2000;n<=y+10;n++)e.add(new Option(n,n))}
+["regMonth","handMonth"].forEach(fillMonths);["regYear","handYear"].forEach(fillYears);
+const now=new Date();regMonth.value=handMonth.value=now.getMonth()+1;regYear.value=handYear.value=now.getFullYear();
+function idx(y,m){return Number(y)*12+Number(m)-1}
+function money(n){return new Intl.NumberFormat("en-SG",{style:"currency",currency:"SGD",maximumFractionDigits:0}).format(n)}
+function show(id,v){document.getElementById(id).innerHTML=(v===null?"$0":money(v))+' <small>/ year</small>'}
+function calc(){
+ const r=idx(regYear.value,regMonth.value),h=idx(handYear.value,handMonth.value),rem=(r+120)-h;
+ const p=Number(parf.value||0),a=Number(price1.value||0),b=Number(price2.value||0);error.textContent="";
+ if(h<r){show("dep1",null);show("dep2",null);error.textContent="Handover Date cannot be before Registration Date.";return}
+ if(rem<=0){show("dep1",null);show("dep2",null);error.textContent="The vehicle has reached or passed its 10-year COE expiry.";return}
+ if((a>0&&p>a)||(b>0&&p>b)){show("dep1",null);show("dep2",null);error.textContent="PARF cannot be higher than an entered price.";return}
+ const years=rem/12;show("dep1",a>0?(a-p)/years:null);show("dep2",b>0?(b-p)/years:null)
+}
+["regMonth","regYear","handMonth","handYear","parf","price1","price2"].forEach(id=>{const e=document.getElementById(id);e.addEventListener("input",calc);e.addEventListener("change",calc)});
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"))}
+</script>
+</body></html>
