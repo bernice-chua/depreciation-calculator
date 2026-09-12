@@ -88,6 +88,15 @@ select:focus,input:focus{border-color:#888}
   .top-action{font-size:13px;min-width:44px;padding-left:2px;padding-right:2px}
 }
 
+
+.brand-footer{
+  text-align:center;
+  color:#8a8a90;
+  font-size:11px;
+  font-weight:600;
+  margin-top:10px;
+  padding-bottom:2px;
+}
 </style>
 </head>
 <body>
@@ -153,13 +162,14 @@ select:focus,input:focus{border-color:#888}
       </div>
     </div>
 
-    <div class="compare" id="savingText">Enter both prices to compare</div>
+    <div class="compare" id="savingText" style="display:none"></div>
 
     <div class="error" id="error"></div>
 
 
     <div class="note">COE expiry is calculated as 10 years from Registration Date.</div>
   </div>
+  <div class="brand-footer">Bernice Chua · @bernice.mercedes</div>
 </div>
 
 <script>
@@ -237,7 +247,8 @@ function calc(){
 
   if(c.error){
     show("dep1",null);show("dep2",null);
-    savingText.textContent="Enter valid details to compare";
+    savingText.textContent="";
+    savingText.style.display="none";
     shareBtn.disabled=true;
     return;
   }
@@ -246,6 +257,7 @@ function calc(){
   shareBtn.disabled=(c.d1===null&&c.d2===null);
 
   if(c.d1!==null&&c.d2!==null){
+    savingText.style.display="";
     if(c.d1===c.d2){
       savingText.textContent="Same annual depreciation";
     }else if(c.d2<c.d1){
@@ -254,7 +266,8 @@ function calc(){
       savingText.textContent="Price 1 saves "+money(c.diff)+"/yr";
     }
   }else{
-    savingText.textContent="Enter both prices to compare";
+    savingText.textContent="";
+    savingText.style.display="none";
   }
 
   save();
@@ -302,7 +315,7 @@ function makeShareCanvas(){
   const hasP1=c.a>0;
   const hasP2=c.b>0;
   const W=1400;
-  const H=hasP2 ? 1050 : 790;
+  const H=hasP2 ? 1100 : 840;
 
   const canvas=document.createElement("canvas");
   canvas.width=W; canvas.height=H;
@@ -389,6 +402,10 @@ function makeShareCanvas(){
       centerText(comp,700,956,"700 46px Arial, sans-serif",dark);
     }
   }
+
+  // Subtle personal branding footer
+  centerText("Bernice Chua · @bernice.mercedes",700,H-32,
+             "600 24px Arial, sans-serif","#777d84");
 
   return canvas;
 }
