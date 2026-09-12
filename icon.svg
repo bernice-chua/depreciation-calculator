@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<rect width="512" height="512" rx="110" fill="#111"/>
-<path d="M130 285h252v82H130z" fill="#fff"/>
-<path d="M175 285l45-75h105l45 75z" fill="#fff"/>
-<circle cx="185" cy="370" r="28" fill="#111"/>
-<circle cx="327" cy="370" r="28" fill="#111"/>
-<text x="256" y="155" text-anchor="middle" font-family="Arial" font-size="95" font-weight="700" fill="#fff">$</text>
-</svg>
