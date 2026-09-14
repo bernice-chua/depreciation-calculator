@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#082f53">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
@@ -12,8 +12,22 @@
 <title>Car Depreciation</title>
 <style>
 :root{
-  --bg:#f4f4f6;--card:#fff;--text:#111;--muted:#6e6e73;--line:#dedee3;
-  --soft:#f8f8fa;--accent:#111;
+  /* Bernice Car Tools family design system */
+  --family-navy:#082f53;
+  --bg:#f4f4f6;
+  --card:#ffffff;
+  --text:#111111;
+  --muted:#6e6e73;
+  --line:#dedee3;
+  --soft:#f8f8fa;
+  --focus:#082f53;
+  --card-radius:18px;
+  --input-radius:11px;
+  --input-height:44px;
+  --title-size:22px;
+  --label-size:12px;
+  --result-size:24px;
+  --shadow:0 4px 16px rgba(0,0,0,.05);
 }
 *{box-sizing:border-box}
 body{
@@ -24,25 +38,25 @@ body{
 .topbar{
   display:flex;justify-content:space-between;align-items:center;margin-bottom:10px
 }
-h1{font-size:22px;line-height:1;margin:0;font-weight:800;white-space:nowrap}
+h1{font-size:var(--title-size);line-height:1;margin:0;font-weight:800;white-space:nowrap}
 .top-actions{display:flex;align-items:center;gap:26px}
 .top-action{
-  border:0;background:transparent;font-size:14px;font-weight:700;color:#555;padding:10px 4px;min-width:48px;min-height:44px
+  border:0;background:transparent;font-size:14px;font-weight:700;color:var(--family-navy);padding:10px 4px;min-width:48px;min-height:44px
 }
 .top-action:disabled{color:#b8b8bd;cursor:default}
 .card{
-  background:var(--card);border-radius:18px;padding:14px;box-shadow:0 4px 16px rgba(0,0,0,.05)
+  background:var(--card);border-radius:var(--card-radius);padding:14px;box-shadow:var(--shadow)
 }
 .section{margin-bottom:12px}
 label{
-  display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:#2d2d2f
+  display:block;font-size:var(--label-size);font-weight:700;margin-bottom:5px;color:#2d2d2f
 }
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 select,input{
-  width:100%;height:44px;border:1px solid var(--line);border-radius:11px;background:#fff;
+  width:100%;height:var(--input-height);border:1px solid var(--line);border-radius:var(--input-radius);background:#fff;
   padding:0 11px;font-size:16px;color:#111;outline:none
 }
-select:focus,input:focus{border-color:#888}
+select:focus,input:focus{border-color:var(--focus);box-shadow:0 0 0 2px rgba(8,47,83,.08)}
 .money{position:relative}
 .money span{
   position:absolute;left:11px;top:50%;transform:translateY(-50%);
@@ -64,7 +78,7 @@ select:focus,input:focus{border-color:#888}
   display:block;font-size:11px;color:var(--muted);font-weight:500;margin-bottom:2px
 }
 .depre strong{
-  display:block;font-size:24px;line-height:1.05;font-weight:800;white-space:nowrap;letter-spacing:-.02em
+  display:block;font-size:var(--result-size);line-height:1.05;font-weight:800;white-space:nowrap;letter-spacing:-.02em
 }
 .compare{
   margin-top:10px;padding:11px 12px;border-radius:12px;background:#efeff2;
@@ -166,7 +180,7 @@ select:focus,input:focus{border-color:#888}
 
     <div class="note">COE expiry is calculated as 10 years from Registration Date.</div>
   </div>
-  <div class="brand-footer">Bernice Chua · @bernice.mercedes</div>
+  <div class="brand-footer">Bernice Chua | @bernice.mercedes</div>
 </div>
 
 <script>
@@ -189,7 +203,7 @@ const now=new Date();
 
 function idx(y,m){return Number(y)*12+Number(m)-1}
 function nval(v){return Number(String(v||"").replace(/[^0-9.]/g,""))||0}
-function money(n){return new Intl.NumberFormat("en-SG",{style:"currency",currency:"SGD",maximumFractionDigits:0}).format(n)}
+function money(n){return "$"+new Intl.NumberFormat("en-SG",{maximumFractionDigits:0}).format(Number(n)||0)}
 function plainMoney(n){return new Intl.NumberFormat("en-SG",{maximumFractionDigits:0}).format(n)}
 function show(id,v){
   document.getElementById(id).textContent=(v===null?"$0":money(v))+"/yr";
@@ -338,7 +352,7 @@ function makeShareCanvas(){
     ctx.textBaseline="alphabetic"; ctx.fillText(text,x,y);
   }
 
-  ctx.fillStyle="#f3f5f7"; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,W,H);
   rr(22,22,W-44,H-44,34,"#ffffff");
 
   // Header: logo + title only. No Share/Clear controls.
@@ -401,7 +415,7 @@ function makeShareCanvas(){
   }
 
   // Subtle personal branding footer
-  centerText("Bernice Chua · @bernice.mercedes",700,H-32,
+  centerText("Bernice Chua | @bernice.mercedes",700,H-32,
              "600 24px Arial, sans-serif","#777d84");
 
   return canvas;
